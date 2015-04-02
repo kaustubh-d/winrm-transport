@@ -51,10 +51,13 @@ module WinRM
       # @param closer [ShellCloser] an optional object to automatically
       #   close the active open remote shell when CommandExecutor garbarge
       #   collects
-      def initialize(service, logger = nil, closer = nil)
+      # @param options [Hash<optional>] an optional hash, example to contain
+      #   winrm shell options, say passing environment variables
+      def initialize(service, logger = nil, closer = nil, options = nil)
         @service        = service
         @logger         = logger
         @closer         = closer
+        @options        = options
         @command_count  = 0
       end
 
@@ -75,7 +78,7 @@ module WinRM
       # @return [String] the remote shell session indentifier
       def open
         close
-        @shell = service.open_shell
+        @shell = service.open_shell(@options.shell_opts)
         add_finalizer(shell)
         @command_count = 0
         determine_max_commands unless max_commands
