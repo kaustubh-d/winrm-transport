@@ -78,7 +78,7 @@ module WinRM
       # @return [String] the remote shell session indentifier
       def open
         close
-        @shell = service.open_shell(@options.shell_opts)
+        @shell = service.open_shell(@options.shell_opts || {})
         add_finalizer(shell)
         @command_count = 0
         determine_max_commands unless max_commands
